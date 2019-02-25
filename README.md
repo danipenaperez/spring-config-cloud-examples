@@ -255,12 +255,9 @@ http://root:123456@localhost:8888/myAppA/dev/version2
 
 
 ## REFRESHING PROPERTIES
-The Server
-Has a watch mechanish, that if you change the value on some property file, the value will be updated quickly and served without restart.
-
-The client project request for properties after initialization, but if the configuration server change the properties values, the client needs to be notified, it is a problem.
-Stop the Configuration server, and chage the file myApp-dev.properties, in this way (f.e):
-
+##Refreshing properties from locally Folder
+The Server has a watch mechanish, that if you change the value on some property file, the value will be updated quickly and served without restart.
+Change the local property file with another value
 ```
 grettingMessage=this site is offline
 ```
@@ -284,15 +281,8 @@ GET -> http://root:123456@localhost:8888/myAppA/dev
 }
 ```
 
-but the client still have the same response on 
-
-
-```
-GET -> http://localhost:8080/	
-
-response: On this environmet the value is Value for MyAppA on Dev Environment!!
-```
-The normal behaivour on refreshing properties using @RefreshScope only works on with application properties, not based on bootstrap cycle. So you need to deep into spring-cloud-bus dependency, in way that the main Configuration Server publish a message and all receivers will the event and ask for the new configuration.
+## Client
+The client must be notified if a property has changed on the Configuration server. The way to resolve this problem is to use spring-cloud-bus, to share events between different apps.
 
 
 
