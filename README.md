@@ -183,6 +183,26 @@ response: On this environmet the value is Value for MyAppA on Dev Environment!!
 ## USING A GIT REPOSITORY
 Lets try to use current repository, only have to change the config Server configuration on application.properties.
 
+```
+spring.cloud.config.server.git.uri=https://github.com/danipenaperez/spring-config-cloud-examples.git
+spring.cloud.config.server.git.username=$yourusername
+spring.cloud.config.server.git.password=$yourpasssss
+#The location
+spring.cloud.config.server.git.searchPaths=spring-cloud-config-server/configurationsFolder
+#for basic authentication spring security
+spring.security.user.name=root
+spring.security.user.password=123456
+```
+After that , run again, and visit the already visited urls on our local Configuration Server:
+
+GET http://root:123456@localhost:8888/myAppA/dev , etc... 
+
+
+Yeah , sounds good. As you can notice, we are getting the value of spring-cloud-config-server/configurationsFolder/{servicename}-{profile}.properties on our github repo, but in **master branch**.
+
+Create new branch (git checkout -b version2) , change the values on properties and push the commit. 
+
+
 
 
 ## REFRESHING PROPERTIES
