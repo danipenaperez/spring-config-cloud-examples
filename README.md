@@ -193,16 +193,65 @@ spring.cloud.config.server.git.searchPaths=spring-cloud-config-server/configurat
 spring.security.user.name=root
 spring.security.user.password=123456
 ```
-After that , run again, and visit the already visited urls on our local Configuration Server:
 
-GET http://root:123456@localhost:8888/myAppA/dev , etc... 
+After that, start it, and visit the already visited urls on our local Configuration Server:
+```
+GET http://root:123456@localhost:8888/myAppA/dev , you will get
+{
+  "name": "myAppA",
+  "profiles": ["dev"],
+  "label": null,
+  "version": "d14b07e689f579a5a7d9e2113d978873a1cefa40",
+  "state": null,
+  "propertySources": [{
+    "name": "https://github.com/danipenaperez/spring-config-cloud-examples.git/spring-cloud-config-server/configurationsFolder/myAppA-dev.properties",
+    "source": {
+      "grettingMessage": "hello from master"
+    }
+  }]
+}
+```
+You can request using the master tag building the URL in this way 
+http://root:123456@localhost:8888/${serviceName}/${profile}/${gitbranch}
 
+```
+GET http://root:123456@localhost:8888/myAppA/dev/master , you will get
+{
+  "name": "myAppA",
+  "profiles": ["dev"],
+  "label": "master",
+  "version": "d14b07e689f579a5a7d9e2113d978873a1cefa40",
+  "state": null,
+  "propertySources": [{
+    "name": "https://github.com/danipenaperez/spring-config-cloud-examples.git/spring-cloud-config-server/configurationsFolder/myAppA-dev.properties",
+    "source": {
+      "grettingMessage": "hello from master"
+    }
+  }]
+}
+```
 
 Yeah , sounds good. As you can notice, we are getting the value of spring-cloud-config-server/configurationsFolder/{servicename}-{profile}.properties on our github repo, but in **master branch**.
 
-Create new branch (git checkout -b version2) , change the values on properties and push the commit. 
+Create new branch (git checkout -b version2) , change the values on properties and push the commit. And retry the requet using version2 branch name:
 
-
+```
+http://root:123456@localhost:8888/myAppA/dev/version2
+{
+  "name": "myAppA",
+  "profiles": ["dev"],
+  "label": "version2",
+  "version": "b1b963a1e8fe8458d41a49bb786d68f3ad977872",
+  "state": null,
+  "propertySources": [{
+    "name": "https://github.com/danipenaperez/spring-config-cloud-examples.git/spring-cloud-config-server/configurationsFolder/myAppA-dev.properties",
+    "source": {
+      "grettingMessage": "message from version2 "
+    }
+  }]
+}
+```
+**Now you have a centralized server that obtain the values from a Versioning Repository.**
 
 
 ## REFRESHING PROPERTIES
