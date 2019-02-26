@@ -255,7 +255,9 @@ http://root:123456@localhost:8888/myAppA/dev/version2
 
 
 ## REFRESHING PROPERTIES
+
 ##Refreshing properties from locally Folder
+
 The Server has a watch mechanish, that if you change the value on some property file, the value will be updated quickly and served without restart.
 Change the local property file with another value
 ```
@@ -281,6 +283,7 @@ GET -> http://root:123456@localhost:8888/myAppA/dev
 }
 ```
 ##Refreshing properties from Remote GIT
+
 Using springBoot 1.* you had to configure a remote webhook to /refresh actuator endpoints after commit or whatelse.
 Using SpringBoot 2 you dont need anything. After request a confguration, (f.e. GET -> http://root:123456@localhost:8888/myAppA/dev ) always ask to remote GIT and compare the last commitId against local clone (generally folder locally at /tmp/{reponame}.. 
 If the last commitId is distinct , start a negotiation and start download changes, you will see traces like :
@@ -291,9 +294,17 @@ And after, the download: o.e.jgit.transport.PacketLineIn - git< ACK 0f8d2413183d
 ```
 
 ## Client
-The client must be notified if a property has changed on the Configuration server. The way to resolve this problem is to use spring-cloud-bus, to share events between different apps.
 
+If the Config Server change, the application does not know about the changes , to force the client APP to reload config from remote Config Server, you can do it manually using curl to /actuator/refresh
 
+```
+curl -X POST http://root:123456@localhost:8080/actuator/refresh
+```
+After that you can request this endpoint to get the updated response based on the new property value
+```
+GET -> http://localhost:8080/	
 
-
+response: On this environmet the value is Value for MyAppA on Dev Environment!!
+```
+**This is soulution is not valid if you have to have to notify many client Apps (microservices), so the main solution is using a broker system (spring-cloud-bus) in which the apps listen for updateConfiguration events**
 
