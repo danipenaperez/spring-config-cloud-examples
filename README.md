@@ -280,6 +280,15 @@ GET -> http://root:123456@localhost:8888/myAppA/dev
   }]
 }
 ```
+##Refreshing properties from Remote GIT
+Using springBoot 1.* you had to configure a remote webhook to /refresh actuator endpoints after commit or whatelse.
+Using SpringBoot 2 you dont need anything. After request a confguration, (f.e. GET -> http://root:123456@localhost:8888/myAppA/dev ) always ask to remote GIT and compare the last commitId against local clone (generally folder locally at /tmp/{reponame}.. 
+If the last commitId is distinct , start a negotiation and start download changes, you will see traces like :
+```
+o.e.jgit.transport.PacketLineOut - git> want 4a766a1677.... o.e.jgit.transport.PacketLineOut - git> have 93cd4a98b5b3bb7d895... and finally o.e.jgit.transport.PacketLineOut - git> done
+
+And after, the download: o.e.jgit.transport.PacketLineIn - git< ACK 0f8d2413183d5.... common and so on.
+```
 
 ## Client
 The client must be notified if a property has changed on the Configuration server. The way to resolve this problem is to use spring-cloud-bus, to share events between different apps.
